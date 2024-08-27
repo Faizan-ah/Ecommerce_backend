@@ -50,6 +50,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new NoSuchElementException(ErrorConstants.ErrorMessage.PRODUCT_DOES_NOT_EXIST));
 
         Optional<Cart> cart = cartJpaRepo.findByUserId(cartDto.userId());
+
         if (cart.isEmpty()) cart = Optional.of(cartJpaRepo.save(cartMapper.toCart(cartDto)));
 
         CartProduct cartProduct = cartProductJpaRepo.findByCartIdAndProductId(cart.get().getId(), product.getId())
@@ -59,20 +60,26 @@ public class CartServiceImpl implements CartService {
         cartProduct.setProduct(product);
         cartProduct.setQuantity(cartDto.quantity());
 
-        cartProductJpaRepo.save(cartProduct);
+        // If quantity is 0, remove the CartProduct entity
+        if (cartDto.quantity() == 0) {
+            cartProductJpaRepo.delete(cartProduct);
+        } else {
+            cartProductJpaRepo.save(cartProduct);
+        }
 
         return getCartByUserId(user.getId());
     }
 
     public CartResponseDto getCartByUserId(UUID userId) {
-        Cart cart = cartJpaRepo.findByUserId(userId).orElseThrow(() -> new NoSuchElementException(ErrorConstants.ErrorMessage.RESOURCE_NOT_FOUND));
+        Cart cart = cartJpaRepo.findByUserId(userId).orElse(new Cart());
         UserDto userDto = userMapper.toUserDto(cart.getUser());
         List<CartProduct> cartProducts = cartProductJpaRepo.findAllByCartId(cart.getId());
         Set<CartProductResponseDto> products = cartProducts.stream()
                 .map(cp -> new CartProductResponseDto(
                         productMapper.toProductDto(cp.getProduct()),
                         cp.getQuantity()))
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparing(cp -> cp.product().name()))  // Sort by product name
+                .collect(Collectors.toCollection(LinkedHashSet::new)); // Preserve order
         return new CartResponseDto(cart.getId(), userDto, products);
     }
 }

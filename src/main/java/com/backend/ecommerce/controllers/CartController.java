@@ -5,6 +5,7 @@ import com.backend.ecommerce.services.CartServiceImpl;
 import com.backend.ecommerce.dtos.cart.CartDto;
 import com.backend.ecommerce.shared.response.GlobalResponse;
 import com.backend.ecommerce.shared.utilities.SecurityUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +23,7 @@ public class CartController {
     private SecurityUtils securityUtils;
 
     @PostMapping
-    public ResponseEntity<GlobalResponse<CartResponseDto>> addProductToCart(@RequestBody CartDto cartDto) {
+    public ResponseEntity<GlobalResponse<CartResponseDto>> addProductToCart(@Valid @RequestBody CartDto cartDto) {
         return ResponseEntity.ok(new GlobalResponse<>(cartService.addProductToCart(cartDto), null));
     }
 
