@@ -9,4 +9,6 @@ public interface CartService {
     CartResponseDto addProductToCart(CartDto cartDto);
 
     CartResponseDto getCartByUserId(UUID userId);
+
+    void deleteCartByUserId(UUID id);
 }

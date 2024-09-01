@@ -8,10 +8,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -28,10 +28,12 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GlobalResponse<OrderCreateDto>> getOrderById(@PathVariable UUID id){
-        Optional<OrderCreateDto> order = orderService.getOrderById(id);
-        return order.map(dto -> ResponseEntity.ok(new GlobalResponse<>(dto, null))).orElseThrow();
+    @PreAuthorize("@securityUtils.isOwner(#userId)")
+    @GetMapping("/{userId}")
+    public ResponseEntity<GlobalResponse<List<OrderCreateDto>>> getOrdersByUserId(@PathVariable UUID userId){
+        List<OrderCreateDto> orders = orderService.getOrderByUserId(userId);
+        GlobalResponse<List<OrderCreateDto>> response = new GlobalResponse<>(orders, null);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
@@ -41,9 +43,9 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<GlobalResponse<OrderCreateDto>> updateOrder(@PathVariable UUID id, @Valid @RequestBody OrderUpdateDto orderDto){
-        OrderCreateDto updatedOrder = orderService.updateOrder(id, orderDto);
+        OrderCreateDto updatedOrder = orderService.updateOrder(orderDto);
         GlobalResponse<OrderCreateDto> response = new GlobalResponse<>(updatedOrder, null);
         return ResponseEntity.ok(response);
     }

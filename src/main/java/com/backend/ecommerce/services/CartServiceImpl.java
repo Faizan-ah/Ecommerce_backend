@@ -82,4 +82,9 @@ public class CartServiceImpl implements CartService {
                 .collect(Collectors.toCollection(LinkedHashSet::new)); // Preserve order
         return new CartResponseDto(cart.getId(), userDto, products);
     }
+
+    public void deleteCartByUserId(UUID id) {
+        Cart cart = cartJpaRepo.findByUserId(id).orElseThrow(() -> new NoSuchElementException(ErrorConstants.ErrorMessage.RESOURCE_NOT_FOUND));
+        cartJpaRepo.delete(cart);
+    }
 }

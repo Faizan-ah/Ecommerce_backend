@@ -38,14 +38,14 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/users/login",
                                 "/api/v1/users/register",
-                                "/api/v1/carts", "/api/v1/orders",
+                                "/api/v1/carts",
                                 "/api/v1/reviews/product/*"
                         )
                         .permitAll()
-
+                        .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasAuthority(AuthenticationRole.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/api/v1/products").hasAuthority(AuthenticationRole.ADMIN.name())
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/products").hasAuthority(AuthenticationRole.ADMIN.name())
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/products").hasAuthority(AuthenticationRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/products", "/api/v1/orders").hasAuthority(AuthenticationRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/products", "/api/v1/orders").hasAuthority(AuthenticationRole.ADMIN.name())
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/products").hasAuthority(AuthenticationRole.ADMIN.name())
                         .requestMatchers("/api/v1/users/profile").hasAnyAuthority(AuthenticationRole.ADMIN.name(), AuthenticationRole.USER.name())
                         .requestMatchers(
@@ -54,8 +54,6 @@ public class SecurityConfig {
                                 "/api/v1/products"
                         ).hasAuthority(AuthenticationRole.ADMIN.name())
                         .requestMatchers(
-                                "/api/v1/orders",
-                                "/api/v1/orders/**",
                                 "/api/v1/payments",
                                 "/api/v1/payments/**").hasAuthority(AuthenticationRole.USER.name())
                         .anyRequest()
