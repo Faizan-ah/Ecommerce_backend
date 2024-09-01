@@ -4,7 +4,9 @@ import com.backend.ecommerce.dtos.user.UserCreateDto;
 import com.backend.ecommerce.dtos.user.UserDto;
 import com.backend.ecommerce.dtos.user.UserLoginDto;
 import com.backend.ecommerce.dtos.user.UserLoginResponseDto;
+import com.backend.ecommerce.entities.Cart;
 import com.backend.ecommerce.entities.User;
+import com.backend.ecommerce.repositories.CartJpaRepo;
 import com.backend.ecommerce.repositories.UserJpaRepo;
 import com.backend.ecommerce.mappers.UserMapper;
 import com.backend.ecommerce.services.interfaces.UserService;
@@ -12,6 +14,7 @@ import com.backend.ecommerce.shared.exceptions.CustomException;
 import com.backend.ecommerce.shared.exceptions.ErrorConstants;
 import com.backend.ecommerce.shared.utilities.Constants;
 import com.backend.ecommerce.shared.utilities.SecurityUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,8 @@ public class UserServiceImpl implements UserService {
     private UserJpaRepo userJpaRepo;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CartJpaRepo cartJpaRepo;
 
     public UserLoginResponseDto loginUser(UserLoginDto userLoginDTO) {
         User user = userJpaRepo.findByEmail(userLoginDTO.email())
@@ -109,19 +114,27 @@ public class UserServiceImpl implements UserService {
                         .orElseThrow(() -> new NoSuchElementException(ErrorConstants.ErrorMessage.USER_DOES_NOT_EXIST)));
     }
 
+    @Transactional
     public UserDto deleteUser(UUID id) {
-        Optional<UserDto> userDto = getUserById(id);
-        return userDto.map(dto -> {
-            User user = userMapper.toUser(dto);
+        Optional<User> userOptional = userJpaRepo.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            Optional<Cart> cart = cartJpaRepo.findByUserId(user.getId());
+            cart.ifPresent(value -> cartJpaRepo.delete(value));
+
             userJpaRepo.delete(user);
-            return dto;
-        }).orElseThrow();
+
+            return userMapper.toUserDto(user);
+        } else {
+            throw new NoSuchElementException(ErrorConstants.ErrorMessage.USER_DOES_NOT_EXIST);
+        }
     }
 
     @Override
     public Optional<UserDto> getUserProfile() {
         String email = SecurityUtils.getCurrentUserLogin();
-        User user = userJpaRepo.findByEmail(email).orElseThrow(()->new NoSuchElementException(ErrorConstants.ErrorMessage.USER_DOES_NOT_EXIST));
+        User user = userJpaRepo.findByEmail(email).orElseThrow(() -> new NoSuchElementException(ErrorConstants.ErrorMessage.USER_DOES_NOT_EXIST));
         return Optional.ofNullable(userMapper.toUserDto(user));
     }
 
