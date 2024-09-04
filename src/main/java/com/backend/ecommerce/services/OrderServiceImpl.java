@@ -3,10 +3,12 @@ package com.backend.ecommerce.services;
 import com.backend.ecommerce.dtos.order.OrderCreateDto;
 import com.backend.ecommerce.dtos.order.OrderUpdateDto;
 import com.backend.ecommerce.entities.Order;
+import com.backend.ecommerce.entities.Product;
 import com.backend.ecommerce.mappers.OrderMapper;
 import com.backend.ecommerce.repositories.OrderJpaRepo;
 import com.backend.ecommerce.services.interfaces.CartService;
 import com.backend.ecommerce.services.interfaces.OrderService;
+import com.backend.ecommerce.shared.exceptions.CustomException;
 import com.backend.ecommerce.shared.exceptions.ErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,12 @@ public class OrderServiceImpl implements OrderService {
     public OrderCreateDto createOrder(OrderCreateDto orderDto) {
         Order order = orderMapper.toOrder(orderDto);
         order.setDateTime(LocalDateTime.now(ZoneOffset.UTC));
+        List<Product> prod = orderDto.products();
+        prod.forEach(product -> {
+            if (product.isDeleted()) {
+                throw new CustomException(ErrorConstants.ErrorMessage.PRODUCT_NOT_ACTIVE, ErrorConstants.ErrorCode.PRODUCT_NOT_ACTIVE);
+            }
+        });
         Order savedOrder = orderJpaRepo.save(order);
         cartService.deleteCartByUserId(order.getUserId());
         return orderMapper.toOrderDto(savedOrder);

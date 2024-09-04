@@ -44,7 +44,7 @@ public class OrderController {
     }
 
     @PutMapping
-    public ResponseEntity<GlobalResponse<OrderCreateDto>> updateOrder(@PathVariable UUID id, @Valid @RequestBody OrderUpdateDto orderDto){
+    public ResponseEntity<GlobalResponse<OrderCreateDto>> updateOrder(@Valid @RequestBody OrderUpdateDto orderDto){
         OrderCreateDto updatedOrder = orderService.updateOrder(orderDto);
         GlobalResponse<OrderCreateDto> response = new GlobalResponse<>(updatedOrder, null);
         return ResponseEntity.ok(response);

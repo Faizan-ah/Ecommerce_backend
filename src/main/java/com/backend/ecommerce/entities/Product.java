@@ -43,4 +43,7 @@ public class Product {
 
   @Column(name = "stock", nullable = false, columnDefinition = "INTEGER")
   private int stock;
+
+  @Column(name = "deleted", nullable = false, columnDefinition = "BOOL")
+  private boolean deleted;
 }

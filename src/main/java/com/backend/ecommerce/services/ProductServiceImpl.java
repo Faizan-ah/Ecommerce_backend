@@ -55,7 +55,8 @@ public class ProductServiceImpl implements ProductService {
     Optional<ProductDto> findProductDto = getProductById(id);
     return findProductDto.map(dto -> {
       Product deletedProduct = productMapper.toProduct(dto);
-      productJpaRepo.delete(deletedProduct);
+      deletedProduct.setDeleted(true);
+      productJpaRepo.save(deletedProduct);
       return dto;
     }).orElseThrow(() -> new NoSuchElementException(
             ErrorConstants.ErrorMessage.PRODUCT_DOES_NOT_EXIST));

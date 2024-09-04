@@ -20,6 +20,8 @@ public record ProductDto(
 
         float rating,
 
-        @NotBlank int stock
+        @NotBlank int stock,
+
+        boolean deleted
 ) {
 }

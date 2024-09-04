@@ -29,7 +29,6 @@ public class ErrorConstants {
     public static final String ORDER_ADDRESS_DOES_NOT_EXIST = "Address is required";
     public static final String ORDER_ADDRESS_LIMIT = "Address should not exceed 255 characters";
     public static final String ORDER_DATE_LIMIT = "Date and time must be in the past or present";
-
     public static final String PAYMENT_DOES_NOT_EXIST = "Payment does not exist.";
     public static final String PAYMENT_ALREADY_EXIST = "Payment already exists for this order";
     public static final String USER_ID_REQUIRED = "User id is required!";
@@ -38,10 +37,12 @@ public class ErrorConstants {
     public static final String PAYMENT_AMOUNT_LIMIT = "Amount must be greater than zero";
     public static final String PAYMENT_STATUS_REQUIRED = "Payment Status is required!";
     public static final String PAYMENT_METHOD_REQUIRED = "Payment Method is required!";
+    public static final String PRODUCT_NOT_ACTIVE = "Product is no longer active";
+
   }
 
   public static class ErrorCode {
     // For demonstration purposes
-    public static final int USER_DOES_NOT_EXIST = 4041;
+    public static final int PRODUCT_NOT_ACTIVE = 4041;
   }
 }
