@@ -16,7 +16,7 @@ public record ProductDto(
 
         List<String> images,
 
-        @NotBlank String color,
+        String color,
 
         float rating,
 

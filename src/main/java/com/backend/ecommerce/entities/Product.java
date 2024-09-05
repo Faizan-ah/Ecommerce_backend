@@ -32,7 +32,7 @@ public class Product {
   @Column(name = "image")
   private List<String> images;
 
-  @Column(name = "color", nullable = false, columnDefinition = "VARCHAR(50)")
+  @Column(name = "color", columnDefinition = "VARCHAR(50)")
   private String color;
 
   @Column(name = "meta", columnDefinition = "VARCHAR(255)")
