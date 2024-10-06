@@ -1,34 +1,57 @@
 # E-commerce Backend Project
-## Features
 
-### Mandatory features
+> [!NOTE]
+> **The project is still a work in progress**
+> 
 
-#### User Functionalities
+This project is an E-commerce backend built with **Spring Boot** and **PostgreSQL** as the database. It provides RESTful APIs for managing users, products, orders, and shopping carts, as well as admin functionalities for user, orders and product management.
 
-1. User Management: Users should be able to register for an account and manage their profile (very basic management).
-2. Browse Products: Users should be able to view all available products and single product, search and sort products.
-3. Add to Cart: Users should be able to add products to a shopping cart, and manage cart.
-4. Orders: Users should be able to place orders and see the history of their orders.
+To run this project locally, ensure you have the following dependencies installed:
 
-#### Admin Functionalities
+- **Java 17+**
+- **Spring Boot**
+- **Maven** (for building and running the project)
+- **PostgreSQL** (for the database)
+- **Postman/Insomnia** (for API testing)
 
-1. User Management: Admins should be able to manage all users.
-2. Product Management: Admins should be able to manage all products.
-3. Order Management: Admins should be able to manage all orders.
+## Getting Started
+### 1. Clone the Repository
 
+First, clone this repository to your local machine:
 
-## Requirements
+```bash
+git clone https://github.com/faizan-ah/ecommerce-backend.git
+cd ecommerce-backend
+```
+### 2. Configure the Database
+ - Ensure PostgreSQL is running on your machine.
+ - Create a database for the project. For example:
+```
+CREATE DATABASE ecom_app;
+```
 
-1. Project should use CLEAN architecture, proper naming convention, security, and comply with Rest API. In README file, explain the structure of your project as well.
-    - PS: you could use the normal layered architecture (Controller, Service, and Repo) However, it is recommended to practice the CLEAN architecture
-2. Error handler: This will ensure any exceptions thrown in your application are handled appropriately and helpful error messages are returned.
-3. `README` file should sufficiently describe the project, as well as the deployment.
+3. Open the project's application.properties file and verify/update the database connection details as needed. The following are the default configurations in application.properties:
 
+update the following parameters:
+ - POSTGRES_HOST: Your database host (default is localhost).
+ - POSTGRES_DB: Your database name (default is ecom_app).
+ - POSTGRES_USER: Your database username (default is postgres).
+ - POSTGRES_PASSWORD: Your database password (default is password).
 
-#### How to work as a team
-1. As a team you should have daily communication (the more, the better).
-2. Decide what tasks you would be working on (The smaller, the better, so code can get merged asap)
-3. You could split the task based on features. one would take the user flow, the other product, etc.
-    - HOWEVER, You don't have to take the entire flow from end to end as your own responsibility.
-      you could be working on users first, and then products, or repo, etc.
-4. Make sure you set deadlines for every 2 days.
+### 3. Install Dependencies
+Make sure Maven is installed on your machine. Navigate to the project root and run the following command to install all necessary dependencies:
+```
+mvn clean install
+```
+### 4. Run the Application
+After the dependencies are installed, you can run the application using:
+```
+mvn spring-boot:run
+```
+The application should now be running on http://localhost:8080.
+
+### Future Enhancements
+ - **Pagination:** Add pagination to the product listing for better user experience.
+ - **Email Notifications:** Implement email notifications when users place an order or receive updates.
+ - and more...
+
