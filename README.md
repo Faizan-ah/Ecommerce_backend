@@ -6,6 +6,8 @@
 
 This project is an E-commerce backend built with **Spring Boot** and **PostgreSQL** as the database. It provides RESTful APIs for managing users, products, orders, and shopping carts, as well as admin functionalities for user, orders and product management.
 
+The project is originally intended to support [Facebrand](https://github.com/Faizan-ah/Facebrand)
+
 To run this project locally, ensure you have the following dependencies installed:
 
 - **Java 17+**
